@@ -65,8 +65,7 @@ public class Routes {
 
         }
         else {
-            waypoints.add(new GeoPoint(42.82467, 74.53717));
-            waypoints.add(new GeoPoint(42.88473, 74.61175));
+
         }
         return  waypoints;
     }
