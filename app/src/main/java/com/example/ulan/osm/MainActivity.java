@@ -58,8 +58,9 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
     MapView map;
     int tTaskcounter=0;
     Routes routes;
+    int asd=0;
     Polyline roadOverlay;
-    ArrayList<GeoPoint> busMarker;
+    ArrayList<ArrayList<GeoPoint>> busMarker;
     int posRoute = 0;
     Marker secondMarker;
     Handler h;
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
     ArrayList<String> s;
     Projection projection;
     double d = 0.0001;
+    TimerTask tTask=null;
     double d0 = 42.82933821970032;
     Marker markerM;
     Search search;
@@ -92,8 +94,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
         s = new ArrayList<>();
         s.add("#");
         s.add("100");
-        s.add("101");
-        s.add("102");
+
         s.add("258");
         SearchPoints searchpoints = new SearchPoints();
         nearRoutes = searchpoints.getNearRoutes();
@@ -137,32 +138,57 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
                     });
                     thread.start();
                 }
-                TimerTask tTask;
+
+                int ad=0;
 
                 Timer timer = new Timer();
+                        switch (s.get(position)){
+                            case "100":
+                                positionBus=100;
+                                ad=0;
+                                break;
+                            case "258":
+                                ad=1;
+                                positionBus=300;
+                                break;
+                            default: ad=2;
 
-                    tTask = new TimerTask() {
-                        public void run() {
-                            tTaskcounter=1;
-                            if (s.get(position).equals("100")) {
-                                map.getOverlays().remove(markerM);
-                                h.sendEmptyMessage(1);
-                                markerM = new Marker(map);
-                                markerM.setPosition(busMarker.get(positionBus));
-                                markerM.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-                                markerM.setIcon(getResources().getDrawable(R.mipmap.ic_launcher_buss));
-                                map.getOverlays().add(markerM);
-                                h.sendEmptyMessage(1);
-                                positionBus++;
-                                if (positionBus == busMarker.size())
-                                    positionBus = 0;
-                            }
                         }
-                    };
-                    timer.schedule(tTask, 1000, 500);
-                if (!s.get(position).equals("100")) {
+                final int finalAd = ad;
+
+                    Log.e("TAHHH",ad+"");
+                if (asd==1) {
                     tTask.cancel();
                 }
+                if (ad!=2) {
+                    tTask = new TimerTask() {
+                        public void run() {
+                            tTaskcounter = 1;
+
+                            map.getOverlays().remove(markerM);
+
+                            markerM = new Marker(map);
+                            markerM.setPosition(busMarker.get(finalAd).get(positionBus));
+                            markerM.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+                            markerM.setIcon(getResources().getDrawable(R.mipmap.ic_launcher_buss));
+                            map.getOverlays().add(markerM);
+                            h.sendEmptyMessage(1);
+                            positionBus++;
+                            if (positionBus == busMarker.get(finalAd).size())
+                                positionBus = 0;
+                        }
+
+                    };
+
+                    timer.schedule(tTask, 1000, 1500);
+                    asd=1;
+                }
+                else{
+                    map.getOverlays().remove(markerM);
+
+                    asd=0;
+                }
+
                 map.invalidate();
                 posRoute = 1;
             }
@@ -185,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
         final IMapController mapController = map.getController();
         mapController.setZoom(13);
 
-        mapController.setCenter(new GeoPoint(42.82517, 74.54311));
+        mapController.setCenter(new GeoPoint(42.876,74.602));
 
 
         h = new Handler() {
@@ -393,8 +419,12 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
 
 
 
-    public ArrayList<GeoPoint> kkk(){
+    public ArrayList<ArrayList<GeoPoint>> kkk(){
+
+        ArrayList<ArrayList<GeoPoint>> waypointsList=new ArrayList<>();
         ArrayList<GeoPoint> waypoints=new ArrayList<>();
+
+
         waypoints.add(new GeoPoint(42.826064906187845,74.54485416412354));
         waypoints.add(new GeoPoint(42.826222280996205,74.54601287841797));
         waypoints.add(new GeoPoint(42.8263167056889,74.54637229442596));
@@ -968,6 +998,635 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
         waypoints.add(new GeoPoint(42.84285847223026,74.60940957069397));
 
         waypoints.add(new GeoPoint(42.842897805279925,74.60913062095642));
+        waypointsList.add(waypoints);
+
+        waypoints=new ArrayList<>();
+
+        waypoints.add(new GeoPoint(42.872496688438474,74.42221283912659));
+
+        waypoints.add(new GeoPoint(42.87239447146584,74.42299604415894));
+        waypoints.add(new GeoPoint(42.87239447146584,74.4235110282898));
+        waypoints.add(new GeoPoint(42.87239447146584,74.42402601242065));
+        waypoints.add(new GeoPoint(42.87239447146584,74.42477703094482));
+        waypoints.add(new GeoPoint(42.87239447146584,74.42559242248535));
+        waypoints.add(new GeoPoint(42.87237088290966,74.42654728889465));
+        waypoints.add(new GeoPoint(42.872355157200516,74.42792057991028));
+        waypoints.add(new GeoPoint(42.87236302005558,74.42896127700806));
+        waypoints.add(new GeoPoint(42.872433785706114,74.42991614341736));
+        waypoints.add(new GeoPoint(42.87230798004908,74.43107485771179));
+        waypoints.add(new GeoPoint(42.87242592286006,74.43184733390808));
+        waypoints.add(new GeoPoint(42.87234729434445,74.43263053894043));
+        waypoints.add(new GeoPoint(42.872323705770235,74.43340301513672));
+        waypoints.add(new GeoPoint(42.87237874576272,74.43445444107056));
+        waypoints.add(new GeoPoint(42.87237874576272,74.43517327308655));
+
+        waypoints.add(new GeoPoint(42.87239447146584,74.43620324134827));
+        waypoints.add(new GeoPoint(42.872410197164946,74.43697571754456));
+        waypoints.add(new GeoPoint(42.872418060013,74.43771600723267));
+        waypoints.add(new GeoPoint(42.87255959110671,74.43858504295349));
+        waypoints.add(new GeoPoint(42.872551728276676,74.43934679031372));
+        waypoints.add(new GeoPoint(42.87255959110671,74.44025874137878));
+        waypoints.add(new GeoPoint(42.872653944988855,74.44124579429626));
+        waypoints.add(new GeoPoint(42.872732573113794,74.4421899318695));
+        waypoints.add(new GeoPoint(42.872732573113794,74.44328427314758));
+        waypoints.add(new GeoPoint(42.87281120113856,74.44424986839294));
+        waypoints.add(new GeoPoint(42.87283478952644,74.44541931152344));
+        waypoints.add(new GeoPoint(42.87286624069628,74.4463849067688));
+        waypoints.add(new GeoPoint(42.87294486855075,74.4471949338913));
+        waypoints.add(new GeoPoint(42.87298418244042,74.44764018058777));
+        waypoints.add(new GeoPoint(42.8730195649197,74.44841265678406));
+
+        waypoints.add(new GeoPoint(42.87239447146584,74.43620324134827));
+        waypoints.add(new GeoPoint(42.872410197164946,74.43697571754456));
+        waypoints.add(new GeoPoint(42.872418060013,74.43771600723267));
+        waypoints.add(new GeoPoint(42.87255959110671,74.43858504295349));
+        waypoints.add(new GeoPoint(42.872551728276676,74.43934679031372));
+        waypoints.add(new GeoPoint(42.87255959110671,74.44025874137878));
+        waypoints.add(new GeoPoint(42.872653944988855,74.44124579429626));
+        waypoints.add(new GeoPoint(42.872732573113794,74.4421899318695));
+        waypoints.add(new GeoPoint(42.872732573113794,74.44328427314758));
+        waypoints.add(new GeoPoint(42.87281120113856,74.44424986839294));
+        waypoints.add(new GeoPoint(42.87283478952644,74.44541931152344));
+        waypoints.add(new GeoPoint(42.87286624069628,74.4463849067688));
+        waypoints.add(new GeoPoint(42.87294486855075,74.4471949338913));
+        waypoints.add(new GeoPoint(42.87298418244042,74.44764018058777));
+        waypoints.add(new GeoPoint(42.8730195649197,74.44841265678406));
+
+        waypoints.add(new GeoPoint(42.87351491749981,74.45815980434418));
+        waypoints.add(new GeoPoint(42.87353064291343,74.45869624614716));
+        waypoints.add(new GeoPoint(42.87355423102634,74.45926487445831));
+        waypoints.add(new GeoPoint(42.87357388778022,74.45982277393341));
+        waypoints.add(new GeoPoint(42.87361320126919,74.46035385131836));
+        waypoints.add(new GeoPoint(42.87361713261671,74.46092784404755));
+        waypoints.add(new GeoPoint(42.873668240111684,74.46157693862915));
+        waypoints.add(new GeoPoint(42.87371148488205,74.46233332157135));
+        waypoints.add(new GeoPoint(42.873754729622135,74.46299314498901));
+        waypoints.add(new GeoPoint(42.87379011165966,74.4636583328247));
+        waypoints.add(new GeoPoint(42.87382549367688,74.46451127529144));
+        waypoints.add(new GeoPoint(42.873837287678136,74.46516573429108));
+        waypoints.add(new GeoPoint(42.87388446366054,74.4659274816513));
+        waypoints.add(new GeoPoint(42.87390412030924,74.46656584739685));
+        waypoints.add(new GeoPoint(42.873919845623675,74.46713447570801));
+
+        waypoints.add(new GeoPoint(42.87396702154298,74.46775674819946));
+        waypoints.add(new GeoPoint(42.873998472135824,74.46848630905151));
+        waypoints.add(new GeoPoint(42.87406530459237,74.46927487850189));
+        waypoints.add(new GeoPoint(42.874088892500936,74.47007954120636));
+        waypoints.add(new GeoPoint(42.874147862232896,74.47078227996826));
+        waypoints.add(new GeoPoint(42.87418324404503,74.47148501873016));
+        waypoints.add(new GeoPoint(42.87421862583686,74.47221457958221));
+        waypoints.add(new GeoPoint(42.87429725196834,74.47299778461456));
+        waypoints.add(new GeoPoint(42.87426973283372,74.47353422641754));
+        waypoints.add(new GeoPoint(42.87431297718262,74.47426378726959));
+        waypoints.add(new GeoPoint(42.87433656499651,74.47478413581848));
+        waypoints.add(new GeoPoint(42.874360152801394,74.47530448436737));
+        waypoints.add(new GeoPoint(42.87439160319388,74.47607696056366));
+        waypoints.add(new GeoPoint(42.87442305357034,74.47681725025177));
+        waypoints.add(new GeoPoint(42.874556717491465,74.47743952274323));
+
+        waypoints.add(new GeoPoint(42.87445450393076,74.47811007499695));
+        waypoints.add(new GeoPoint(42.87456458006604,74.47876989841461));
+        waypoints.add(new GeoPoint(42.87457637392604,74.47935998439789));
+        waypoints.add(new GeoPoint(42.87456851135296,74.47987496852875));
+        waypoints.add(new GeoPoint(42.874603892923915,74.48052942752838));
+        waypoints.add(new GeoPoint(42.874631411909526,74.48128044605255));
+        waypoints.add(new GeoPoint(42.874690381123095,74.48196172714233));
+        waypoints.add(new GeoPoint(42.87470217495904,74.48270201683044));
+        waypoints.add(new GeoPoint(42.87476507537938,74.48328673839569));
+        waypoints.add(new GeoPoint(42.874769006653516,74.48416650295258));
+        waypoints.add(new GeoPoint(42.87481225065256,74.48493897914886));
+        waypoints.add(new GeoPoint(42.87483976954526,74.48558807373047));
+        waypoints.add(new GeoPoint(42.8748830134947,74.48647320270538));
+        waypoints.add(new GeoPoint(42.87490660109072,74.48723495006561));
+        waypoints.add(new GeoPoint(42.87493411994135,74.48803424835205));
+
+        waypoints.add(new GeoPoint(42.87498522634568,74.48890328407288));
+        waypoints.add(new GeoPoint(42.87499702012528,74.48983669281006));
+        waypoints.add(new GeoPoint(42.875028470193186,74.49061989784241));
+        waypoints.add(new GeoPoint(42.87505992024508,74.49123680591583));
+        waypoints.add(new GeoPoint(42.875095301534294,74.49199855327606));
+        waypoints.add(new GeoPoint(42.87510709529287,74.49278712272644));
+        waypoints.add(new GeoPoint(42.875150339055,74.49352741241455));
+        waypoints.add(new GeoPoint(42.87521717026413,74.49403703212738));
+        waypoints.add(new GeoPoint(42.87521323901853,74.49484705924988));
+        waypoints.add(new GeoPoint(42.875252551463184,74.49567317962646));
+        waypoints.add(new GeoPoint(42.875252551463184,74.49637591838837));
+        waypoints.add(new GeoPoint(42.87531545132255,74.49715375900269));
+        waypoints.add(new GeoPoint(42.87528007015955,74.49810862541199));
+        waypoints.add(new GeoPoint(42.875205376526594,74.49872016906738));
+        waypoints.add(new GeoPoint(42.875150339055,74.4992458820343));
+
+        waypoints.add(new GeoPoint(42.8750166764196,74.50022757053375));
+        waypoints.add(new GeoPoint(42.874914463620726,74.50088739395142));
+        waypoints.add(new GeoPoint(42.87485156335265,74.50140237808228));
+        waypoints.add(new GeoPoint(42.874769006653516,74.50201392173767));
+        waypoints.add(new GeoPoint(42.87467858728489,74.50280249118805));
+        waypoints.add(new GeoPoint(42.87450167944135,74.50370371341705));
+        waypoints.add(new GeoPoint(42.87444664134216,74.5044493675232));
+        waypoints.add(new GeoPoint(42.874360152801394,74.50526475906372));
+        waypoints.add(new GeoPoint(42.874246144994274,74.50602650642395));
+        waypoints.add(new GeoPoint(42.874246144994274,74.5070081949234));
+        waypoints.add(new GeoPoint(42.87419110666719,74.50777530670166));
+        waypoints.add(new GeoPoint(42.87417538142186,74.50848340988159));
+        waypoints.add(new GeoPoint(42.87413999960522,74.50923442840576));
+        waypoints.add(new GeoPoint(42.87415572485957,74.51000154018402));
+        waypoints.add(new GeoPoint(42.87411248040048,74.51066136360168));
+
+        waypoints.add(new GeoPoint(42.87411248040048,74.51141774654388));
+        waypoints.add(new GeoPoint(42.874088892500936,74.51229751110077));
+        waypoints.add(new GeoPoint(42.87401812874819,74.51306462287903));
+        waypoints.add(new GeoPoint(42.87404171667479,74.51389610767365));
+        waypoints.add(new GeoPoint(42.87400633478152,74.51497435569763));
+        waypoints.add(new GeoPoint(42.87398667816537,74.51565563678741));
+        waypoints.add(new GeoPoint(42.87397881551717,74.5164442062378));
+        waypoints.add(new GeoPoint(42.873900188979995,74.51701819896698));
+        waypoints.add(new GeoPoint(42.873900188979995,74.51780140399933));
+        waypoints.add(new GeoPoint(42.87392377695166,74.51845586299896));
+        waypoints.add(new GeoPoint(42.87396702154298,74.51933026313782));
+        waypoints.add(new GeoPoint(42.87397488419269,74.51995253562927));
+        waypoints.add(new GeoPoint(42.8740259913914,74.5206069946289));
+        waypoints.add(new GeoPoint(42.87408102986574,74.5216691493988));
+        waypoints.add(new GeoPoint(42.87413999960522,74.52239871025085));
+
+        waypoints.add(new GeoPoint(42.87415572485957,74.52300488948822));
+        waypoints.add(new GeoPoint(42.87422255714581,74.52385783195496));
+        waypoints.add(new GeoPoint(42.87430904587943,74.52465176582336));
+        waypoints.add(new GeoPoint(42.87430904587943,74.52533841133118));
+        waypoints.add(new GeoPoint(42.87437587799964,74.52603042125702));
+        waypoints.add(new GeoPoint(42.874442710047475,74.52658295631409));
+        waypoints.add(new GeoPoint(42.87449774815018,74.52744662761688));
+        waypoints.add(new GeoPoint(42.87458030521219,74.52828884124756));
+        waypoints.add(new GeoPoint(42.874603892923915,74.52900767326355));
+        waypoints.add(new GeoPoint(42.87463534319219,74.5296835899353));
+        waypoints.add(new GeoPoint(42.87469431240199,74.53041315078735));
+        waypoints.add(new GeoPoint(42.87473362517722,74.53101396560669));
+        waypoints.add(new GeoPoint(42.87475328155545,74.53166842460632));
+        waypoints.add(new GeoPoint(42.874816181923684,74.53237116336823));
+        waypoints.add(new GeoPoint(42.87484763208378,74.53304708003998));
+
+        waypoints.add(new GeoPoint(42.874902669825346,74.5337176322937));
+        waypoints.add(new GeoPoint(42.874977363824684,74.53460276126862));
+        waypoints.add(new GeoPoint(42.874989157605796,74.53521966934204));
+        waypoints.add(new GeoPoint(42.87506385150045,74.53605115413666));
+        waypoints.add(new GeoPoint(42.87510709529287,74.53689336776733));
+        waypoints.add(new GeoPoint(42.875158201553944,74.53773558139801));
+        waypoints.add(new GeoPoint(42.875272207676126,74.5387065410614));
+        waypoints.add(new GeoPoint(42.87532724503903,74.53984379768372));
+        waypoints.add(new GeoPoint(42.87540586975805,74.54067528247833));
+        waypoints.add(new GeoPoint(42.8754569757717,74.54129219055176));
+        waypoints.add(new GeoPoint(42.87551201296982,74.54206466674805));
+        waypoints.add(new GeoPoint(42.875508081743014,74.54270303249359));
+        waypoints.add(new GeoPoint(42.87554739399984,74.54346477985382));
+        waypoints.add(new GeoPoint(42.87559849989627,74.54395294189453));
+        waypoints.add(new GeoPoint(42.87568498670152,74.54465568065643));
+
+        waypoints.add(new GeoPoint(42.87584616633332,74.54534232616425));
+        waypoints.add(new GeoPoint(42.87588154717175,74.54602360725403));
+        waypoints.add(new GeoPoint(42.87594444638999,74.54665660858154));
+        waypoints.add(new GeoPoint(42.87607417582513,74.54732179641724));
+        waypoints.add(new GeoPoint(42.876199973804816,74.5481264591217));
+        waypoints.add(new GeoPoint(42.87630218447449,74.54877018928528));
+        waypoints.add(new GeoPoint(42.87637294560815,74.54938173294067));
+        waypoints.add(new GeoPoint(42.876486949486186,74.55020248889923));
+        waypoints.add(new GeoPoint(42.87658915968052,74.55076038837433));
+        waypoints.add(new GeoPoint(42.87663633355927,74.55130755901337));
+        waypoints.add(new GeoPoint(42.87675819924578,74.55211222171783));
+        waypoints.add(new GeoPoint(42.876832890999204,74.55284714698792));
+        waypoints.add(new GeoPoint(42.87696261856658,74.55362498760223));
+        waypoints.add(new GeoPoint(42.87706875910069,74.55420970916748));
+        waypoints.add(new GeoPoint(42.877115932612796,74.55471932888031));
+
+        waypoints.add(new GeoPoint(42.87723779735216,74.55534160137177));
+        waypoints.add(new GeoPoint(42.87728497073504,74.55586194992065));
+        waypoints.add(new GeoPoint(42.877383248500216,74.55652177333832));
+        waypoints.add(new GeoPoint(42.87750511271166,74.55735325813293));
+        waypoints.add(new GeoPoint(42.87762697668243,74.55800771713257));
+        waypoints.add(new GeoPoint(42.87765449431995,74.55873727798462));
+        waypoints.add(new GeoPoint(42.87771739173102,74.55944001674652));
+        waypoints.add(new GeoPoint(42.877831393125206,74.56009447574615));
+        waypoints.add(new GeoPoint(42.87790608357961,74.56095278263092));
+        waypoints.add(new GeoPoint(42.87785891067156,74.5617413520813));
+        waypoints.add(new GeoPoint(42.87785891067156,74.56230461597443));
+        waypoints.add(new GeoPoint(42.87776063366396,74.56306636333466));
+        waypoints.add(new GeoPoint(42.87778422016005,74.56381738185883));
+        waypoints.add(new GeoPoint(42.87771739173102,74.56441819667816));
+        waypoints.add(new GeoPoint(42.8776662875894,74.56486880779266));
+
+        waypoints.add(new GeoPoint(42.87764270104822,74.56517457962036));
+        waypoints.add(new GeoPoint(42.87765056322961,74.56571102142334));
+        waypoints.add(new GeoPoint(42.87760732121954,74.56624209880829));
+        waypoints.add(new GeoPoint(42.87754835479335,74.56678926944733));
+        waypoints.add(new GeoPoint(42.877489388310806,74.56735253334045));
+        waypoints.add(new GeoPoint(42.87751690600967,74.56778705120087));
+        waypoints.add(new GeoPoint(42.87750511271166,74.56811964511871));
+        waypoints.add(new GeoPoint(42.87744614618779,74.56855952739716));
+        waypoints.add(new GeoPoint(42.87741862845736,74.56911742687225));
+        waypoints.add(new GeoPoint(42.87745007729113,74.56992745399475));
+        waypoints.add(new GeoPoint(42.87739111071467,74.57064628601074));
+        waypoints.add(new GeoPoint(42.87732035074855,74.5711237192154));
+        waypoints.add(new GeoPoint(42.87737145517666,74.57162261009216));
+        waypoints.add(new GeoPoint(42.877123794861305,74.57181572914124));
+        waypoints.add(new GeoPoint(42.876691369705554,74.57181572914124));
+
+        waypoints.add(new GeoPoint(42.87647122482588,74.57164406776428));
+        waypoints.add(new GeoPoint(42.876219629715976,74.57158505916595));
+        waypoints.add(new GeoPoint(42.87608596939662,74.57188546657562));
+        waypoints.add(new GeoPoint(42.87608990058662,74.57237362861633));
+        waypoints.add(new GeoPoint(42.876042726290144,74.57284569740295));
+        waypoints.add(new GeoPoint(42.87603879509714,74.57339286804199));
+        waypoints.add(new GeoPoint(42.87596410238254,74.57394540309906));
+        waypoints.add(new GeoPoint(42.87593265279146,74.57465887069702));
+        waypoints.add(new GeoPoint(42.87588940957753,74.57530796527863));
+        waypoints.add(new GeoPoint(42.87591299678888,74.5757907629013));
+        waypoints.add(new GeoPoint(42.87588154717175,74.57639157772064));
+        waypoints.add(new GeoPoint(42.87588154717175,74.57699239253998));
+        waypoints.add(new GeoPoint(42.8757989918505,74.577357172966));
+        waypoints.add(new GeoPoint(42.87580292305879,74.57794725894928));
+        waypoints.add(new GeoPoint(42.87576361096475,74.57851052284241));
+
+        waypoints.add(new GeoPoint(42.87580685426683,74.57894504070282));
+        waypoints.add(new GeoPoint(42.87573216127147,74.57944929599762));
+        waypoints.add(new GeoPoint(42.87572429884566,74.57996964454651));
+        waypoints.add(new GeoPoint(42.875677124269686,74.58036661148071));
+        waypoints.add(new GeoPoint(42.87566533062006,74.58072602748871));
+        waypoints.add(new GeoPoint(42.87566533062006,74.58115518093109));
+        waypoints.add(new GeoPoint(42.875629949657664,74.5815896987915));
+        waypoints.add(new GeoPoint(42.87562208721882,74.58208322525024));
+        waypoints.add(new GeoPoint(42.875594568674984,74.58264112472534));
+        waypoints.add(new GeoPoint(42.87557491256472,74.5833545923233));
+        waypoints.add(new GeoPoint(42.875527737874556,74.58378374576569));
+        waypoints.add(new GeoPoint(42.875508081743014,74.58418607711792));
+        waypoints.add(new GeoPoint(42.8755198754227,74.58467960357666));
+        waypoints.add(new GeoPoint(42.87548056314833,74.58525896072388));
+        waypoints.add(new GeoPoint(42.875413732224445,74.58588123321533));
+
+        waypoints.add(new GeoPoint(42.875413732224445,74.58635866641998));
+        waypoints.add(new GeoPoint(42.87540586975805,74.58694338798523));
+        waypoints.add(new GeoPoint(42.87536262617499,74.5875334739685));
+        waypoints.add(new GeoPoint(42.87536262617499,74.58804309368134));
+        waypoints.add(new GeoPoint(42.87529972636372,74.5885580778122));
+        waypoints.add(new GeoPoint(42.875268276434035,74.58905160427094));
+        waypoints.add(new GeoPoint(42.875272207676126,74.58951830863953));
+        waypoints.add(new GeoPoint(42.87528793264197,74.59009230136871));
+        waypoints.add(new GeoPoint(42.875232895244,74.59044635295868));
+        waypoints.add(new GeoPoint(42.875209307772685,74.59090769290924));
+        waypoints.add(new GeoPoint(42.875209307772685,74.59137439727783));
+        waypoints.add(new GeoPoint(42.87518965153971,74.59187865257263));
+        waypoints.add(new GeoPoint(42.875150339055,74.59230244159698));
+        waypoints.add(new GeoPoint(42.87518965153971,74.59290325641632));
+        waypoints.add(new GeoPoint(42.87512675155214,74.5932787656784));
+
+        waypoints.add(new GeoPoint(42.87510709529287,74.59395468235016));
+        waypoints.add(new GeoPoint(42.87505992024508,74.59435701370239));
+        waypoints.add(new GeoPoint(42.87506778275555,74.59498465061188));
+        waypoints.add(new GeoPoint(42.87503633270767,74.59547817707062));
+        waypoints.add(new GeoPoint(42.87500488264376,74.5961594581604));
+        waypoints.add(new GeoPoint(42.874989157605796,74.59658324718475));
+        waypoints.add(new GeoPoint(42.87493805120472,74.59690511226654));
+        waypoints.add(new GeoPoint(42.87494591373072,74.59728062152863));
+        waypoints.add(new GeoPoint(42.87493411994135,74.59805309772491));
+        waypoints.add(new GeoPoint(42.87499702012528,74.59855735301971));
+        waypoints.add(new GeoPoint(42.87494591373072,74.59897577762604));
+        waypoints.add(new GeoPoint(42.87486728842568,74.59951758384705));
+        waypoints.add(new GeoPoint(42.87486728842568,74.59996283054352));
+        waypoints.add(new GeoPoint(42.87483976954526,74.60041344165802));
+        waypoints.add(new GeoPoint(42.87487908222783,74.60091233253479));
+
+        waypoints.add(new GeoPoint(42.87485156335265,74.60128784179688));
+        waypoints.add(new GeoPoint(42.87479259429311,74.60163652896881));
+        waypoints.add(new GeoPoint(42.87482404446521,74.6020656824112));
+        waypoints.add(new GeoPoint(42.87478473174758,74.60244655609131));
+        waypoints.add(new GeoPoint(42.87481225065256,74.60277378559113));
+        waypoints.add(new GeoPoint(42.87477686920105,74.6032190322876));
+        waypoints.add(new GeoPoint(42.87476507537938,74.60364818572998));
+        waypoints.add(new GeoPoint(42.87474148772926,74.60404515266418));
+        waypoints.add(new GeoPoint(42.87474148772926,74.60436165332794));
+        waypoints.add(new GeoPoint(42.87475328155545,74.60478007793427));
+        waypoints.add(new GeoPoint(42.87469431240199,74.60519313812256));
+        waypoints.add(new GeoPoint(42.87468644984394,74.60563838481903));
+        waypoints.add(new GeoPoint(42.874690381123095,74.60592806339264));
+        waypoints.add(new GeoPoint(42.87467072472484,74.60630893707275));
+        waypoints.add(new GeoPoint(42.87466286216378,74.60673809051514));
+
+        waypoints.add(new GeoPoint(42.8746156867764,74.60708677768707));
+        waypoints.add(new GeoPoint(42.87463534319219,74.60751593112946));
+        waypoints.add(new GeoPoint(42.87461961806006,74.60793972015381));
+        waypoints.add(new GeoPoint(42.87464713703866,74.60853517055511));
+        waypoints.add(new GeoPoint(42.87453312976171,74.60886776447296));
+        waypoints.add(new GeoPoint(42.87468251856453,74.60911452770233));
+        waypoints.add(new GeoPoint(42.87503633270767,74.60912525653839));
+        waypoints.add(new GeoPoint(42.875354763702084,74.60918426513672));
+        waypoints.add(new GeoPoint(42.87564567453235,74.60920035839081));
+        waypoints.add(new GeoPoint(42.87576361096475,74.60958123207092));
+        waypoints.add(new GeoPoint(42.875740023696295,74.60998356342316));
+        waypoints.add(new GeoPoint(42.87571250520505,74.61040198802948));
+        waypoints.add(new GeoPoint(42.87570464277672,74.61077213287354));
+        waypoints.add(new GeoPoint(42.87576361096475,74.61121737957001));
+        waypoints.add(new GeoPoint(42.875681055485735,74.61152851581573));
+
+        waypoints.add(new GeoPoint(42.87565353696819,74.6120434999466));
+        waypoints.add(new GeoPoint(42.87566139940303,74.61241364479065));
+        waypoints.add(new GeoPoint(42.8756731930534,74.61290717124939));
+        waypoints.add(new GeoPoint(42.87566139940303,74.61335241794586));
+        waypoints.add(new GeoPoint(42.87561815599903,74.61371183395386));
+        waypoints.add(new GeoPoint(42.87568891791707,74.61417853832245));
+        waypoints.add(new GeoPoint(42.87561815599903,74.61455941200256));
+        waypoints.add(new GeoPoint(42.87562601843837,74.61492955684662));
+        waypoints.add(new GeoPoint(42.87562601843837,74.61522459983826));
+        waypoints.add(new GeoPoint(42.87562208721882,74.61566984653473));
+        waypoints.add(new GeoPoint(42.87554739399984,74.61614727973938));
+        waypoints.add(new GeoPoint(42.8755198754227,74.61650133132935));
+        waypoints.add(new GeoPoint(42.87554346277528,74.61685538291931));
+        waypoints.add(new GeoPoint(42.875496288061086,74.61720943450928));
+        waypoints.add(new GeoPoint(42.87547663191952,74.61747229099274));
+
+        waypoints.add(new GeoPoint(42.87548842560521,74.6177726984024));
+        waypoints.add(new GeoPoint(42.87546483823158,74.6181857585907));
+        waypoints.add(new GeoPoint(42.87545304454138,74.61856126785278));
+        waypoints.add(new GeoPoint(42.87545304454138,74.61897432804108));
+        waypoints.add(new GeoPoint(42.87541766345727,74.61922109127045));
+        waypoints.add(new GeoPoint(42.87541766345727,74.61961805820465));
+        waypoints.add(new GeoPoint(42.87539407605659,74.61982190608978));
+        waypoints.add(new GeoPoint(42.87541766345727,74.62018132209778));
+        waypoints.add(new GeoPoint(42.87539407605659,74.62048709392548));
+        waypoints.add(new GeoPoint(42.87536655741107,74.62084114551544));
+        waypoints.add(new GeoPoint(42.87533903875327,74.62121665477753));
+        waypoints.add(new GeoPoint(42.87533903875327,74.6216082572937));
+        waypoints.add(new GeoPoint(42.875342969990854,74.62201595306396));
+        waypoints.add(new GeoPoint(42.87531938256163,74.62239682674408));
+        waypoints.add(new GeoPoint(42.87531545132255,74.62277233600616));
+
+        waypoints.add(new GeoPoint(42.87530758884363,74.6231210231781));
+        waypoints.add(new GeoPoint(42.875272207676126,74.62355554103851));
+        waypoints.add(new GeoPoint(42.875311520083216,74.6239310503006));
+        waypoints.add(new GeoPoint(42.875225032754564,74.62441921234131));
+        waypoints.add(new GeoPoint(42.87523682648832,74.62480008602142));
+        waypoints.add(new GeoPoint(42.87522110150947,74.62513267993927));
+        waypoints.add(new GeoPoint(42.875268276434035,74.6255511045456));
+        waypoints.add(new GeoPoint(42.875177857796935,74.62587296962738));
+        waypoints.add(new GeoPoint(42.87514247655504,74.62642014026642));
+        waypoints.add(new GeoPoint(42.87500881390262,74.62672591209412));
+        waypoints.add(new GeoPoint(42.87499308886566,74.62727308273315));
+        waypoints.add(new GeoPoint(42.87504026396454,74.62782561779022));
+        waypoints.add(new GeoPoint(42.875000951384635,74.62828695774078));
+        waypoints.add(new GeoPoint(42.87498522634568,74.6287751197815));
+        waypoints.add(new GeoPoint(42.87500881390262,74.62907016277313));
+
+        waypoints.add(new GeoPoint(42.875000951384635,74.62945103645325));
+        waypoints.add(new GeoPoint(42.875012745161236,74.62998747825623));
+        waypoints.add(new GeoPoint(42.87499702012528,74.63054537773132));
+        waypoints.add(new GeoPoint(42.874977363824684,74.63097989559174));
+        waypoints.add(new GeoPoint(42.87499702012528,74.63137686252594));
+        waypoints.add(new GeoPoint(42.87499308886566,74.63183283805847));
+        waypoints.add(new GeoPoint(42.874989157605796,74.6322512626648));
+        waypoints.add(new GeoPoint(42.874981295085306,74.63256776332855));
+        waypoints.add(new GeoPoint(42.874989157605796,74.63295936584473));
+        waypoints.add(new GeoPoint(42.874981295085306,74.63347971439362));
+        waypoints.add(new GeoPoint(42.8749695013027,74.63391423225403));
+        waypoints.add(new GeoPoint(42.8749695013027,74.63422536849976));
+        waypoints.add(new GeoPoint(42.874965570041326,74.63460624217987));
+        waypoints.add(new GeoPoint(42.8749695013027,74.63508903980255));
+        waypoints.add(new GeoPoint(42.874941982467845,74.6357274055481));
+
+        waypoints.add(new GeoPoint(42.874989157605796,74.63634431362152));
+        waypoints.add(new GeoPoint(42.875508081743014,74.63716506958008));
+        waypoints.add(new GeoPoint(42.8757911294332,74.6369880437851));
+        waypoints.add(new GeoPoint(42.87616066196372,74.63708460330963));
+        waypoints.add(new GeoPoint(42.876502674142486,74.63718116283417));
+        waypoints.add(new GeoPoint(42.87685254670876,74.63737428188324));
+        waypoints.add(new GeoPoint(42.877253521817124,74.63750302791595));
+        waypoints.add(new GeoPoint(42.877544423696264,74.63768541812897));
+        waypoints.add(new GeoPoint(42.877866772825406,74.63768541812897));
+        waypoints.add(new GeoPoint(42.87820091343789,74.63767468929291));
+        waypoints.add(new GeoPoint(42.878668707255535,74.63761568069458));
+        waypoints.add(new GeoPoint(42.879069670562274,74.63751375675201));
+        waypoints.add(new GeoPoint(42.87937235682283,74.63741719722748));
+        waypoints.add(new GeoPoint(42.87977331555703,74.63737428188324));
+        waypoints.add(new GeoPoint(42.88016247889557,74.6372938156128));
+
+        waypoints.add(new GeoPoint(42.88053198524829,74.63726162910461));
+        waypoints.add(new GeoPoint(42.88092900556534,74.63710606098175));
+        waypoints.add(new GeoPoint(42.88134174675078,74.63701486587524));
+        waypoints.add(new GeoPoint(42.88171517687272,74.63696658611298));
+        waypoints.add(new GeoPoint(42.88203357340208,74.63690221309662));
+        waypoints.add(new GeoPoint(42.882414860910984,74.63682174682617));
+        waypoints.add(new GeoPoint(42.882890484294286,74.6366822719574));
+        waypoints.add(new GeoPoint(42.88321673623037,74.63659644126892));
+        waypoints.add(new GeoPoint(42.88362946211138,74.63651061058044));
+        waypoints.add(new GeoPoint(42.88419548168686,74.63646233081818));
+        waypoints.add(new GeoPoint(42.8844981428012,74.63633358478546));
+        waypoints.add(new GeoPoint(42.884836178134584,74.63625848293304));
+        waypoints.add(new GeoPoint(42.8853078522485,74.63618874549866));
+        waypoints.add(new GeoPoint(42.88570484183264,74.63604390621185));
+        waypoints.add(new GeoPoint(42.88612934271989,74.6359795331955));
+
+        waypoints.add(new GeoPoint(42.88649881333662,74.63594734668732));
+        waypoints.add(new GeoPoint(42.886935100258036,74.63580787181854));
+        waypoints.add(new GeoPoint(42.88733994031688,74.635711312294));
+        waypoints.add(new GeoPoint(42.88767796007821,74.63565766811371));
+        waypoints.add(new GeoPoint(42.888067073556535,74.6355664730072));
+        waypoints.add(new GeoPoint(42.888102447387396,74.63590979576111));
+        waypoints.add(new GeoPoint(42.88809458653785,74.63608682155609));
+        waypoints.add(new GeoPoint(42.88814568204201,74.63640868663788));
+        waypoints.add(new GeoPoint(42.88819677750384,74.63681638240814));
+        waypoints.add(new GeoPoint(42.88825573375336,74.63715434074402));
+        waypoints.add(new GeoPoint(42.88828717706341,74.63756203651428));
+        waypoints.add(new GeoPoint(42.88828717706341,74.63785171508789));
+        waypoints.add(new GeoPoint(42.88830682912404,74.63815212249756));
+        waypoints.add(new GeoPoint(42.88830289871241,74.63847398757935));
+        waypoints.add(new GeoPoint(42.888365785268384,74.63883340358734));
+
+        waypoints.add(new GeoPoint(42.88838150689735,74.63919818401337));
+        waypoints.add(new GeoPoint(42.88840901973841,74.63947713375092));
+        waypoints.add(new GeoPoint(42.88841295014328,74.63973999023438));
+        waypoints.add(new GeoPoint(42.88842474135637,74.64009940624237));
+        waypoints.add(new GeoPoint(42.88847190618619,74.64056074619293));
+        waypoints.add(new GeoPoint(42.88847976698765,74.64103281497955));
+        waypoints.add(new GeoPoint(42.88847976698765,74.64139223098755));
+        waypoints.add(new GeoPoint(42.888483697388004,74.64173018932343));
+        waypoints.add(new GeoPoint(42.88849941898693,74.64226126670837));
+        waypoints.add(new GeoPoint(42.88850727978489,74.64264214038849));
+        waypoints.add(new GeoPoint(42.88851907097994,74.64313566684723));
+        waypoints.add(new GeoPoint(42.888515140581845,74.64355409145355));
+        waypoints.add(new GeoPoint(42.88856230534253,74.64398860931396));
+        waypoints.add(new GeoPoint(42.8885937484963,74.64442312717438));
+        waypoints.add(new GeoPoint(42.8885976788894,74.64485228061676));
+
+        waypoints.add(new GeoPoint(42.88855444455159,74.6451848745346));
+        waypoints.add(new GeoPoint(42.88854658375965,74.64560866355896));
+        waypoints.add(new GeoPoint(42.88858981810295,74.64596271514893));
+        waypoints.add(new GeoPoint(42.88858981810295,74.64637041091919));
+        waypoints.add(new GeoPoint(42.88853479256984,74.64682102203369));
+        waypoints.add(new GeoPoint(42.888542653363295,74.64728236198425));
+        waypoints.add(new GeoPoint(42.888515140581845,74.64777052402496));
+        waypoints.add(new GeoPoint(42.88856230534253,74.64819431304932));
+        waypoints.add(new GeoPoint(42.88855444455159,74.64847326278687));
+        waypoints.add(new GeoPoint(42.88853872296669,74.64891850948334));
+        waypoints.add(new GeoPoint(42.888558374947195,74.64938521385193));
+        waypoints.add(new GeoPoint(42.888570166132475,74.64980900287628));
+        waypoints.add(new GeoPoint(42.88853872296669,74.65016841888428));
+        waypoints.add(new GeoPoint(42.88855051415574,74.65061902999878));
+        waypoints.add(new GeoPoint(42.88855051415574,74.65108036994934));
+
+
+        waypoints.add(new GeoPoint(42.888526931775395,74.65142905712128));
+        waypoints.add(new GeoPoint(42.88853872296669,74.65185284614563));
+        waypoints.add(new GeoPoint(42.888526931775395,74.65219616889954));
+        waypoints.add(new GeoPoint(42.88853086217275,74.65273261070251));
+        waypoints.add(new GeoPoint(42.88853872296669,74.65317249298096));
+        waypoints.add(new GeoPoint(42.88849155818797,74.65355336666107));
+        waypoints.add(new GeoPoint(42.88850727978489,74.65398788452148));
+        waypoints.add(new GeoPoint(42.88849548858757,74.6543151140213));
+        waypoints.add(new GeoPoint(42.88849155818797,74.65471744537354));
+        waypoints.add(new GeoPoint(42.88853086217275,74.65506076812744));
+        waypoints.add(new GeoPoint(42.888526931775395,74.65553820133209));
+        waypoints.add(new GeoPoint(42.888558374947195,74.65587615966797));
+        waypoints.add(new GeoPoint(42.888515140581845,74.65635895729065));
+        waypoints.add(new GeoPoint(42.88845618458026,74.65678811073303));
+        waypoints.add(new GeoPoint(42.8884050893333,74.65749621391296));
+
+        waypoints.add(new GeoPoint(42.888361854860506,74.65802729129791));
+        waypoints.add(new GeoPoint(42.888361854860506,74.65842962265015));
+        waypoints.add(new GeoPoint(42.888291107476036,74.65879440307617));
+        waypoints.add(new GeoPoint(42.888259664168004,74.65928792953491));
+        waypoints.add(new GeoPoint(42.88825573375336,74.65967953205109));
+        waypoints.add(new GeoPoint(42.88814961246365,74.66031789779663));
+        waypoints.add(new GeoPoint(42.88815747330619,74.66080069541931));
+        waypoints.add(new GeoPoint(42.888110308235945,74.6612298488617));
+        waypoints.add(new GeoPoint(42.88805135184742,74.66168582439423));
+        waypoints.add(new GeoPoint(42.88800811712669,74.66225445270538));
+        waypoints.add(new GeoPoint(42.8879766736744,74.66271579265594));
+        waypoints.add(new GeoPoint(42.88789806497354,74.66321468353271));
+        waypoints.add(new GeoPoint(42.88783517794072,74.66371357440948));
+        waypoints.add(new GeoPoint(42.88781552572983,74.66427683830261));
+        waypoints.add(new GeoPoint(42.887752638612874,74.66473817825317));
+
+        waypoints.add(new GeoPoint(42.8877408472713,74.66517269611359));
+        waypoints.add(new GeoPoint(42.88766223826991,74.66573059558868));
+        waypoints.add(new GeoPoint(42.88759149008301,74.66630458831787));
+        waypoints.add(new GeoPoint(42.887556115959136,74.66679811477661));
+        waypoints.add(new GeoPoint(42.887465715328176,74.66734528541565));
+        waypoints.add(new GeoPoint(42.887410688792286,74.66794073581696));
+        waypoints.add(new GeoPoint(42.887347801262585,74.66846108436584));
+        waypoints.add(new GeoPoint(42.887308496523985,74.66896533966064));
+        waypoints.add(new GeoPoint(42.887214165049116,74.66948568820953));
+        waypoints.add(new GeoPoint(42.88711197245523,74.67009723186493));
+        waypoints.add(new GeoPoint(42.88704515412923,74.67055320739746));
+        waypoints.add(new GeoPoint(42.88695868324697,74.67101454734802));
+        waypoints.add(new GeoPoint(42.88687221224349,74.6716046333313));
+        waypoints.add(new GeoPoint(42.88681718517817,74.67203915119171));
+        waypoints.add(new GeoPoint(42.886730713976334,74.67258632183075));
+
+        waypoints.add(new GeoPoint(42.88667175626923,74.6729028224945));
+        waypoints.add(new GeoPoint(42.88656170173186,74.67349290847778));
+        waypoints.add(new GeoPoint(42.88645557752772,74.67408299446106));
+        waypoints.add(new GeoPoint(42.88634945314101,74.67480182647705));
+        waypoints.add(new GeoPoint(42.886207953674734,74.67536509037018));
+        waypoints.add(new GeoPoint(42.88612934271989,74.67591762542725));
+        waypoints.add(new GeoPoint(42.88600356498375,74.67645943164825));
+        waypoints.add(new GeoPoint(42.885901370384325,74.67705488204956));
+        waypoints.add(new GeoPoint(42.88584241188456,74.67762351036072));
+        waypoints.add(new GeoPoint(42.8857166335634,74.67809021472931));
+        waypoints.add(new GeoPoint(42.88568125836437,74.67849254608154));
+        waypoints.add(new GeoPoint(42.88555941030131,74.67913091182709));
+        waypoints.add(new GeoPoint(42.88549652088428,74.67960298061371));
+        waypoints.add(new GeoPoint(42.885358950061,74.68015015125275));
+        waypoints.add(new GeoPoint(42.88529606043961,74.68065440654755));
+
+        waypoints.add(new GeoPoint(42.885174211615706,74.68104064464569));
+        waypoints.add(new GeoPoint(42.88509559934353,74.68161463737488));
+        waypoints.add(new GeoPoint(42.88496981949967,74.68207061290741));
+        waypoints.add(new GeoPoint(42.88484010876711,74.68275725841522));
+        waypoints.add(new GeoPoint(42.88462392360675,74.68377649784088));
+        waypoints.add(new GeoPoint(42.88453351867868,74.6841949224472));
+        waypoints.add(new GeoPoint(42.884443113618126,74.6848064661026));
+        waypoints.add(new GeoPoint(42.884305540445695,74.68532145023346));
+        waypoints.add(new GeoPoint(42.884191551013274,74.68589544296265));
+        waypoints.add(new GeoPoint(42.88411686816749,74.68638360500336));
+        waypoints.add(new GeoPoint(42.883959640828195,74.68694150447845));
+        waypoints.add(new GeoPoint(42.88384958145226,74.68736529350281));
+        waypoints.add(new GeoPoint(42.8837748981925,74.68801438808441));
+        waypoints.add(new GeoPoint(42.88361766998167,74.6885883808136));
+        waypoints.add(new GeoPoint(42.88344471848695,74.68925356864929));
+
+        waypoints.add(new GeoPoint(42.883322866006345,74.68978464603424));
+        waypoints.add(new GeoPoint(42.88322459770152,74.69013333320618));
+        waypoints.add(new GeoPoint(42.88308702181179,74.69070196151733));
+        waypoints.add(new GeoPoint(42.88293372260185,74.69110429286957));
+        waypoints.add(new GeoPoint(42.88283545367719,74.69169437885284));
+        waypoints.add(new GeoPoint(42.88272932306273,74.69198405742645));
+        waypoints.add(new GeoPoint(42.882627123039235,74.69227910041809));
+        waypoints.add(new GeoPoint(42.88217115164093,74.69224154949188));
+        waypoints.add(new GeoPoint(42.88195888794394,74.69213962554932));
+        waypoints.add(new GeoPoint(42.88178986262587,74.69209134578705));
+        waypoints.add(new GeoPoint(42.88157366677669,74.69204306602478));
+        waypoints.add(new GeoPoint(42.88130636904308,74.69204306602478));
+        waypoints.add(new GeoPoint(42.881015484899514,74.69194650650024));
+        waypoints.add(new GeoPoint(42.880787493666126,74.69184994697571));
+        waypoints.add(new GeoPoint(42.88061846513894,74.69185531139374));
+
+        waypoints.add(new GeoPoint(42.8768053729953,74.69043374061584));
+        waypoints.add(new GeoPoint(42.87651053646913,74.69052493572235));
+        waypoints.add(new GeoPoint(42.876215698534246,74.69048202037811));
+        waypoints.add(new GeoPoint(42.87597196477781,74.69052493572235));
+        waypoints.add(new GeoPoint(42.87570071156219,74.69051420688629));
+        waypoints.add(new GeoPoint(42.875358694938676,74.69050884246826));
+        waypoints.add(new GeoPoint(42.875095301534294,74.69048738479614));
+        waypoints.add(new GeoPoint(42.874926257413854,74.69046592712402));
+        waypoints.add(new GeoPoint(42.87465893088287,74.69048738479614));
+        waypoints.add(new GeoPoint(42.87433656499651,74.69043910503387));
+        waypoints.add(new GeoPoint(42.8741714501099,74.69049274921417));
+        waypoints.add(new GeoPoint(42.873915914295445,74.69047665596008));
+        waypoints.add(new GeoPoint(42.873833356344626,74.69047665596008));
+        waypoints.add(new GeoPoint(42.873632858004285,74.69048738479614));
+        waypoints.add(new GeoPoint(42.873452015805256,74.69047129154205));
+
+        waypoints.add(new GeoPoint(42.873200408385934,74.69052493572235));
+        waypoints.add(new GeoPoint(42.872972388276146,74.6904981136322));
+        waypoints.add(new GeoPoint(42.872732573113794,74.69054102897644));
+        waypoints.add(new GeoPoint(42.87252420836371,74.69050347805023));
+        waypoints.add(new GeoPoint(42.87226866572866,74.69052493572235));
+        waypoints.add(new GeoPoint(42.872001327685695,74.69053566455841));
+        waypoints.add(new GeoPoint(42.871785097539124,74.69053030014038));
+        waypoints.add(new GeoPoint(42.87155314072152,74.69054639339447));
+        waypoints.add(new GeoPoint(42.87137229242842,74.69056785106659));
+        waypoints.add(new GeoPoint(42.87118751210336,74.69052493572235));
+        waypoints.add(new GeoPoint(42.87091230633839,74.69054102897644));
+        waypoints.add(new GeoPoint(42.87062923627134,74.69057321548462));
+        waypoints.add(new GeoPoint(42.87040513821423,74.69059467315674));
+        waypoints.add(new GeoPoint(42.870181039343436,74.69058394432068));
+        waypoints.add(new GeoPoint(42.869949076497406,74.69060003757477));
+
+        waypoints.add(new GeoPoint(42.869905829090705,74.69101309776306));
+        waypoints.add(new GeoPoint(42.869878307997936,74.69134569168091));
+        waypoints.add(new GeoPoint(42.869854718480084,74.69178557395935));
+        waypoints.add(new GeoPoint(42.869874376412255,74.692263007164));
+        waypoints.add(new GeoPoint(42.86989010275348,74.69257950782776));
+        waypoints.add(new GeoPoint(42.86989010275348,74.69298720359802));
+        waypoints.add(new GeoPoint(42.869878307997936,74.69355046749115));
+        waypoints.add(new GeoPoint(42.86985865006702,74.69406545162201));
+        waypoints.add(new GeoPoint(42.86986651324014,74.69458043575287));
+        waypoints.add(new GeoPoint(42.869831128953216,74.69500958919525));
+        waypoints.add(new GeoPoint(42.869835060541654,74.6957391500473));
+        waypoints.add(new GeoPoint(42.86980753941734,74.69622731208801));
+        waypoints.add(new GeoPoint(42.869756428725324,74.69665110111237));
+        waypoints.add(new GeoPoint(42.869496943020735,74.69671547412872));
+        waypoints.add(new GeoPoint(42.8692728408525,74.6966940164566));
+
+        waypoints.add(new GeoPoint(42.86898583162419,74.69661891460419));
+        waypoints.add(new GeoPoint(42.86876172760025,74.69666719436646));
+        waypoints.add(new GeoPoint(42.868730274338795,74.69707489013672));
+        waypoints.add(new GeoPoint(42.86871847936162,74.69754159450531));
+        waypoints.add(new GeoPoint(42.86871061604224,74.6979171037674));
+        waypoints.add(new GeoPoint(42.868734205997356,74.69848573207855));
+        waypoints.add(new GeoPoint(42.8687656592568,74.69884514808655));
+        waypoints.add(new GeoPoint(42.868746000971534,74.6992689371109));
+        waypoints.add(new GeoPoint(42.86876959091311,74.69968736171722));
+        waypoints.add(new GeoPoint(42.86881677076923,74.70011115074158));
+        waypoints.add(new GeoPoint(42.86879711250023,74.70073878765106));
+
+
+        waypointsList.add(waypoints);
 
 
 
@@ -976,6 +1635,10 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
 
 
 
-        return waypoints;
+
+
+
+
+        return waypointsList;
     }
 }
